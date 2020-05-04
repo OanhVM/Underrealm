@@ -1,0 +1,6 @@
+matplotlib
+pyrosbag
+numpy
+pyrealsense2
+Pillow
+opencv-python
