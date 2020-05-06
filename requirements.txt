@@ -1,6 +1,11 @@
+scikit-image
 matplotlib
 pyrosbag
 numpy
 pyrealsense2
 Pillow
 opencv-python
+scikit-learn
+tensorflow==1.14
+keras==2.2.5
+IPython
