@@ -84,11 +84,11 @@ def apply_mask(image, mask, color, alpha=0.5):
     return image
 
 
-def display_instances(image, boxes, masks, class_ids, class_names,
+def display_instances(image, boxes, masks, class_ids, class_names, depth_data,
                       scores=None, title="",
                       figsize=(16, 16), ax=None,
                       show_mask=True, show_bbox=True,
-                      colors=None, captions=None):
+                      colors=None, captions=None, ):
     """
     boxes: [num_instance, (y1, x1, y2, x2, class_id)] in image coordinates.
     masks: [height, width, num_instances]
@@ -147,11 +147,14 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             caption = "{} {:.3f}".format(label, score) if score else label
         else:
             caption = captions[i]
-        ax.text(x1, y1 + 8, caption,
+        ax.text(x1, y1 + 10, caption,
                 color='w', size=11, backgroundcolor="none")
 
         # Mask
         mask = masks[:, :, i]
+        depth = depth_calculation(mask.flatten(), np.asarray(depth_data).flatten())
+        ax.text(x1, y1 + 25, "depth: " + str(depth) + "m", color='w', size=11, backgroundcolor="none")
+
         if show_mask:
             masked_image = apply_mask(masked_image, mask, color)
 
@@ -169,6 +172,25 @@ def display_instances(image, boxes, masks, class_ids, class_names,
     ax.imshow(masked_image.astype(np.uint8))
     if auto_show:
         plt.show()
+
+
+def depth_calculation(mask, depth_data):
+    min_distance = 100
+    for i in range(len(mask)):
+        if mask[i] == True:
+            if float(depth_data[i]) < min_distance:
+                min_distance = float(depth_data[i])
+
+    # total = 0
+    # num = 0
+    # for i in range(len(mask)):
+    #     if mask[i] == True:
+    #         num += 1
+    #         total += depth_data[i]
+    #
+    # min_distance = total/num
+
+    return '%.2f' % min_distance
 
 
 def display_differences(image,

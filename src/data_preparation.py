@@ -1,3 +1,4 @@
+import math
 from os.path import join, abspath, pardir
 
 import cv2
@@ -88,9 +89,11 @@ def change_name(r_path, d_path):
 def get_depth_data(img_path):
     depth_data = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
     depth_data = np.asarray(depth_data)
-    depth_data = np.asarray([[j * 0.001 for j in i] for i in depth_data])
-    print(depth_data[453, 205])
+    depth_data = np.asarray([[j * 0.01 for j in i] for i in depth_data])
+    print(depth_data.shape)
+    # print(depth_data[453, 205])
 
 
 if __name__ == "__main__":
-    pass
+    print("TESTTTTTTTTTTTTT")
+    get_depth_data(join(depth_final, "2.png"))

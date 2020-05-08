@@ -130,22 +130,22 @@ def detect(model):
     # Get random image from validation dataset
     val_list = glob.glob(join(VAL_PATH, "*.png"))
     image_path = random.choice(val_list)
+    # for image_path in val_list:
     print("Running on {}".format(image_path))
     image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    plt.imshow(image)
-    plt.show()
 
     # Detect objects
     r = model.detect([image], verbose=1)[0]
 
-    # Display results
-    dataset_val = UnderRealmDataset()
-    dataset_val.load_underrealm(RGB_PATH, "val")
-    dataset_val.prepare()
-    visualize.display_instances(image, r["rois"], r["masks"], r["class_ids"],
-                                dataset_val.class_names, r["scores"],
-                                title="Predictions")
+    class_name = ['BG', 'underrealm']
+
+    depth_data = np.array(cv2.imread(image_path, cv2.IMREAD_UNCHANGED))
+    depth_data = [[j * 0.01 for j in i] for i in depth_data]
+
+    visualize.display_instances(image=image, boxes=r["rois"], masks=r["masks"], class_ids=r["class_ids"],
+                                class_names=class_name, scores=r["scores"],
+                                title="Predictions", depth_data=depth_data)
 
 
 def color_splash(image, mask):
